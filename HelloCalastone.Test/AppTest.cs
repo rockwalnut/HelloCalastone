@@ -17,7 +17,7 @@ public class AppTest
             "apple crumble" 
         };
    
-        string[] words = { "hello", "world", "test", "abc", "aeiou" };
+        string[] words = { "hello", "world", "test", "abc", "aeiou", "to", "do'" };
 
         mockFileService
             .Setup(fs => fs.ReadFileByLineAsync(It.IsAny<string>())) // with any file path

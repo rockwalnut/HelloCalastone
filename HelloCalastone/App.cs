@@ -52,4 +52,10 @@ public class App
             }
         }
     }
+
+    public static async Task Main(string[] args)
+    {
+        var app = new App(new FileService(), new TextService());
+        await app.RunWithDependencyInjectionsAsync();
+    }
 }
