@@ -2,45 +2,54 @@
 
 using HelloCalastone.Services;
 
-string filePath = "Assets/Hello.txt";
+namespace HelloCalastone;
 
-//di version
-ITextService textService = new TextService();
-IFileService fileService = new FileService();
-
-var lines = await fileService.ReadFileByLineAsync(filePath);
-foreach (var line in lines)
+public class App
 {
-    string[] words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    private ITextService _textService;
+    private IFileService _fileService;
 
-    //Apply text filters to the line
-    words = await textService.FilterMiddleVowelWordsAsync(words);
-    words = await textService.FilterWordsLessThanLengthAsync(words, 3);
-    words = await textService.FilterWordsByContainsAsync(words, 't');
-
-    Console.WriteLine(string.Join(' ', words));
-}
-
-
-//less memory consume version
-using (StreamReader reader = new StreamReader(filePath))
-{
-    string? line;
-    while ((line = await reader.ReadLineAsync()) != null)
+    public App(IFileService fileService, ITextService textService)
     {
-        string[] words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        _fileService = fileService;
+        _textService = textService;
+    }
 
-        //Apply text filters to the line
-        words = await textService.FilterMiddleVowelWordsAsync(words);
-        words = await textService.FilterWordsLessThanLengthAsync(words, 3);
-        words = await textService.FilterWordsByContainsAsync(words, 't');
-        
-        Console.WriteLine(string.Join(' ', words));
+    string filePath = "Assets/Hello.txt";
+
+    public async Task RunWithDependencyInjectionsAsync()
+    {       
+        var lines = await _fileService.ReadFileByLineAsync(filePath);
+        foreach (var line in lines)
+        {
+            string[] words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            //Apply text filters to the line
+            words = await _textService.FilterMiddleVowelWordsAsync(words);
+            words = await _textService.FilterWordsLessThanLengthAsync(words, 3);
+            words = await _textService.FilterWordsByContainsAsync(words, 't');
+
+            Console.WriteLine(string.Join(' ', words));
+        }
+    }
+
+    public async Task RunWithLessMemoryConsumeAsync()
+    {
+        //less memory consume version
+        using (StreamReader reader = new StreamReader(filePath))
+        {
+            string? line;
+            while ((line = await reader.ReadLineAsync()) != null)
+            {
+                string[] words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                //Apply text filters to the line
+                words = await _textService.FilterMiddleVowelWordsAsync(words);
+                words = await _textService.FilterWordsLessThanLengthAsync(words, 3);
+                words = await _textService.FilterWordsByContainsAsync(words, 't');
+
+                Console.WriteLine(string.Join(' ', words));
+            }
+        }
     }
 }
-
-
-Console.ReadLine();
-
-// See https://aka.ms/new-console-template for more information
-//Console.WriteLine("Hello, World!");

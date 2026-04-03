@@ -6,6 +6,8 @@ using Moq;
 
 namespace HelloCalastone.Test;
 
+
+//mock file stream is very dificault because contains too many static and vitual method
 public class FileServiceTest
 {
     /*[Fact]

@@ -1,8 +1,4 @@
 
-
-
-
-using System.IO.Pipes;
 using HelloCalastone.Services;
 using Moq;
 
@@ -10,24 +6,44 @@ namespace HelloCalastone.Test;
 
 public class AppTest
 {
-    /*[Fact]
-    public async Task Main_ShouldReturnResultCorrectly()
+    [Fact]
+    public async Task RunWithDependencyInjectionsAsync_ShouldReturnResultCorrectly()
     {
-        // Arrange
-        string[] words = { "hello", "world", "test", "abc", "aeiou", "to", "'do" };
-
+         // Arrange
         var mockFileService = new Mock<IFileService>();
-        mockFileService.Setup(r => r.ReadFileByLineAsync("mock"))
-                .ReturnsAsync(words);
+        var fakeLines = new List<string> { 
+            "apple pie", 
+            "banana bread", 
+            "apple crumble" 
+        };
+   
+        string[] words = { "hello", "world", "test", "abc", "aeiou" };
 
-        var fileService = new FileService();
+        mockFileService
+            .Setup(fs => fs.ReadFileByLineAsync(It.IsAny<string>())) // with any file path
+            .ReturnsAsync(fakeLines); // return the fake lines
+
+        var mockTextService = new Mock<ITextService>();
+
+        mockTextService
+            .Setup(ts => ts.FilterMiddleVowelWordsAsync(It.IsAny<string[]>()))
+            .ReturnsAsync(words);   
+    
+        mockTextService.Setup(ts => ts.FilterWordsLessThanLengthAsync(It.IsAny<string[]>(), It.IsAny<int>()))
+            .ReturnsAsync(words);  //   Return the same words for simplicity
+
+        mockTextService
+            .Setup(ts => ts.FilterWordsByContainsAsync(It.IsAny<string[]>(), It.IsAny<char>()))
+            .ReturnsAsync(words); // Return the same words for simplicity
+
+        var app = new App(mockFileService.Object, mockTextService.Object);
 
         // Act
-        var result = await fileService.ReadFileByLineAsync("mock");
+        await app.RunWithDependencyInjectionsAsync();
 
         // Assert
-        Assert.Contains("world", result);
-        Assert.Contains("test", result);
-    }*/
+        //Assert.Equal(2, result);
+    }
+    
 
 }
