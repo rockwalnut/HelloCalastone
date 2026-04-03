@@ -22,6 +22,24 @@ foreach (var line in lines)
 }
 
 
+//less memory consume version
+using (StreamReader reader = new StreamReader(filePath))
+{
+    string? line;
+    while ((line = await reader.ReadLineAsync()) != null)
+    {
+        string[] words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        //Apply text filters to the line
+        words = await textService.FilterMiddleVowelWordsAsync(words);
+        words = await textService.FilterWordsLessThanLengthAsync(words, 3);
+        words = await textService.FilterWordsByContainsAsync(words, 't');
+        
+        Console.WriteLine(string.Join(' ', words));
+    }
+}
+
+
 Console.ReadLine();
 
 // See https://aka.ms/new-console-template for more information

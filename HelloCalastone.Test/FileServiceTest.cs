@@ -9,28 +9,21 @@ namespace HelloCalastone.Test;
 public class FileServiceTest
 {
     [Fact]
-    public async Task ReadFileAndApplyTextFilterAsync_ShouldFilterCorrectly()
+    public async Task ReadFileByLineAsync_ShouldReturnLinesCorrectly()
     {
         string filePath = "Assets/Hello.txt";
 
-        //moq
-        var mockTextService = new Mock<ITextService>();
-
-        string[] words = { "hello", "world", "test", "abc", "aeiou" };
-
-        mockTextService.Setup(r => r.FilterMiddleVowelWordsAsync(It.IsAny<string[]>())).ReturnsAsync(words);
-        mockTextService.Setup(r => r.FilterWordsLessThanLengthAsync(It.IsAny<string[]>(), It.IsAny<int>())).ReturnsAsync(words);
-        mockTextService.Setup(r => r.FilterWordsByContainsAsync(It.IsAny<string[]>(), It.IsAny<char>())).ReturnsAsync(words);
+        //string[] words = { "hello", "world", "test", "abc", "aeiou" };
 
         //arrange
-        var _fileService = new FileService(mockTextService.Object);
+        var _fileService = new FileService();
 
         // Act
-        var result = await _fileService.ReadFileAndApplyTextFilterAsync(filePath);
+        var result = await _fileService.ReadFileByLineAsync(filePath);
         
         // Assert
-        Assert.Contains("hello", result);
-        Assert.Contains("world", result);
+        Assert.Contains("Alice", result);
+        Assert.Contains("MARMALADE", result);
         //Assert.DoesNotContain("aeiou", result);
     }
 
