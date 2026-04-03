@@ -17,9 +17,11 @@ public class App
 
     string filePath = "Assets/Hello.txt";
 
-    public async Task RunWithDependencyInjectionsAsync()
+    public async Task<IEnumerable<string>> RunWithDependencyInjectionsAsync()
     {       
         var lines = await _fileService.ReadFileByLineAsync(filePath);
+        var filteredLines = new List<string>();
+
         foreach (var line in lines)
         {
             string[] words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -29,8 +31,10 @@ public class App
             words = await _textService.FilterWordsLessThanLengthAsync(words, 3);
             words = await _textService.FilterWordsByContainsAsync(words, 't');
 
-            Console.WriteLine(string.Join(' ', words));
+            filteredLines.Add(string.Join(' ', words));
         }
+
+        return filteredLines;
     }
 
     public async Task RunWithLessMemoryConsumeAsync()
@@ -56,6 +60,11 @@ public class App
     public static async Task Main(string[] args)
     {
         var app = new App(new FileService(), new TextService());
-        await app.RunWithDependencyInjectionsAsync();
+        var results = await app.RunWithDependencyInjectionsAsync();
+
+        foreach (var result in results)
+        {
+            Console.WriteLine(result);
+        }
     }
 }
