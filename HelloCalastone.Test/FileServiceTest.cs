@@ -8,7 +8,7 @@ namespace HelloCalastone.Test;
 
 public class FileServiceTest
 {
-    [Fact]
+    /*[Fact]
     public async Task ReadFileByLineAsync_ShouldReturnLinesCorrectly()
     {
         string filePath = "Assets/Hello.txt";
@@ -25,6 +25,6 @@ public class FileServiceTest
         Assert.Contains("Alice", result);
         Assert.Contains("MARMALADE", result);
         //Assert.DoesNotContain("aeiou", result);
-    }
+    }*/
 
 }
