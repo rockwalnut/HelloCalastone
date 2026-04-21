@@ -1,5 +1,7 @@
 ﻿
 
+using System.Runtime.CompilerServices;
+using HelloCalastone.Constants;
 using HelloCalastone.Services;
 
 namespace HelloCalastone;
@@ -57,14 +59,37 @@ public class App
         }
     }
 
+    public async Task RunWithDependencyInjectionByLineAsync()
+    {
+        int index = 0;
+        string? line;
+
+        do
+        {
+            line = await _fileService.ReadByLineIndexAsync(filePath, index);
+
+            if(line != Constants.Word.END_OF_FILE)
+            {
+                string[] words = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                //Apply text filters to the line
+                words = await _textService.FilterMiddleVowelWordsAsync(words);
+                words = await _textService.FilterWordsLessThanLengthAsync(words, 3);
+                words = await _textService.FilterWordsByContainsAsync(words, 't');
+
+                Console.WriteLine(string.Join(' ', words));
+
+                index++;
+            }
+         
+        }
+        while (line != Constants.Word.END_OF_FILE);
+    }
+
     public static async Task Main(string[] args)
     {
         var app = new App(new FileService(), new TextService());
-        var results = await app.RunWithDependencyInjectionsAsync();
-
-        foreach (var result in results)
-        {
-            Console.WriteLine(result);
-        }
+        await app.RunWithDependencyInjectionByLineAsync();
+        
     }
 }

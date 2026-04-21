@@ -9,5 +9,7 @@ namespace HelloCalastone.Constants
     public class Word
     {
         public static readonly string[] VOWELS = { "A", "E", "I", "O", "U" };
+
+        public static readonly string END_OF_FILE = "<EOF>";
     }
 }
